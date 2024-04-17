@@ -39,7 +39,9 @@ document.addEventListener("DOMContentLoaded", function() {
 // Funktion för att hämta data och uppdatera listan med arbetslivserfarenheter
 async function getData(url) {
     const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to fetch data");
     const data = await response.json();
+    if (!Array.isArray(data)) throw new Error("Data is not an array");
     const ul = document.getElementById("cv-list");
     if (!ul) {
         console.error("UL element not found");
