@@ -2,20 +2,39 @@
 // Funktionen för att visa felmeddelanden
 function displayErrors(errors) {
     const errorList = document.getElementById('error-list');
-    errorList.innerHTML = ""; // Rensa befintlig lista
+    errorList.innerHTML = "";                       // Rensa befintlig lista
   
     errors.forEach(error => {
         const li = document.createElement('li');
         li.textContent = error;
-        errorList.appendChild(li); // Lägg till felmeddelande i listan
+        errorList.appendChild(li);                 // Lägg till felmeddelande i listan
     });
   }
 
- // Array för att lagra felmeddelanden
- let errors = [];
-
-         // Kontrollera om något av fälten är tomt. Lägg till felmeddelande i array
-         if (!companyname) {
+  //
+  document.addEventListener("DOMContentLoaded", function() {
+    const url = "http://127.0.0.1:3000/cv";     //Url till databasen för hämta/skicka data
+  
+    // Kör koden endast om den aktuella sidan är index.html
+    if (window.location.pathname === "/index.html") {
+        getData(url);                           // Hämta och visa CV-data
+    }
+  
+    // Kör koden endast om den aktuella sidan är add.html
+    else if (window.location.pathname === "/add.html") {
+        
+        //Hämta in ID för cvForm och lägg till lyssnare
+        document.getElementById('cvForm').addEventListener('submit', async function(event) {
+            event.preventDefault();             // Förhindra standardbeteende för formuläret
+            let companyname = document.getElementById('companyname').value;
+            let jobtitle = document.getElementById('jobtitle').value;
+            let location = document.getElementById('location').value;
+       
+        // Skapa en array för att lagra felmeddelanden
+        let errors = [];
+  
+          // Kontrollera om något av fälten är tomt och lägg till lämpligt felmeddelande i arrayen
+          if (!companyname) {
             errors.push("Company name is required");
         }
         if (!jobtitle) {
@@ -30,7 +49,16 @@ function displayErrors(errors) {
       displayErrors(errors);
       return;
   }
-
+  
+  // Om inga fel finns, skicka data till servern och återställ formuläret
+  await createWork(url, companyname, jobtitle, location); // Skicka data till servern
+  await getData(url); // Uppdatera CV-listan efter att data har lagts till
+  resetForm();
+  
+          });
+    }
+  });
+  
 // Funktion för att hämta data och uppdatera listan med arbetslivserfarenheter
 async function getData(url) {
     const response = await fetch(url);
@@ -108,4 +136,8 @@ async function createWork(url, companyname, jobtitle, location) {
     console.log(data);
   }
   
+  // Funktionen för att rensa formuläret vid skicka av datan
+function resetForm() {
+    document.getElementById('cvForm').reset();
+  }
   
