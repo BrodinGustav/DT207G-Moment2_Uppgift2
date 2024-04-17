@@ -75,4 +75,37 @@ function createSpanWithText(text) {
     return span;
   }
   
+// Funktion för ta bort en arbetslivserfarenhet
+async function deleteWork(url, id) {                    //URL och id som argument      
+    try {
+      const response = await fetch(`${url}/${id}`, {  //Skickar förfrågan till databasens url och id för radering
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete work experience');
+      }
+      console.log('Work experience deleted successfully');
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 
+  // Funktion för att lägga till ny arbetslivserfarenhet till servern
+async function createWork(url, companyname, jobtitle, location) {
+    let work = {                                        //Skapar nytt objekt som skickar till databasen
+        companyname: companyname,
+        jobtitle: jobtitle,
+        location: location
+    };
+    const response = await fetch(url, {                 //Databasens URL som argument   
+        method: "POST",                                 //POST för att skicka data till databasen
+        headers: {
+            "content-type": "Application/json"          //Anger att det är JSON-data som skickas till databasen
+        },
+        body: JSON.stringify(work)                      //Omvandlar objektet till JSON-sträng till databasen
+    });
+    const data = await response.json();
+    console.log(data);
+  }
+  
+  
