@@ -32,6 +32,8 @@ h1{
 .ul-container{
     display: flex;
     justify-content: center;
+    width:40vw;
+    margin:0 auto;
     background-color: rgb(227, 227, 227);
     box-shadow: 1px 1px 10px 1px orange;
     border-radius: 10px;
